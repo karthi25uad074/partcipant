@@ -1,0 +1,126 @@
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import 'leaflet/dist/leaflet.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------------------------------------------------------------------
+   Palette — "field at dusk": deep humus charcoal-green surfaces, chlorophyll
+   lime accent, laterite amber for warnings, monsoon blue for water.
+--------------------------------------------------------------------------- */
+:root {
+  --canvas: 160 14% 7%;
+  --surface: 160 12% 10%;
+  --raised: 158 11% 13%;
+  --line: 158 10% 20%;
+  --ink: 90 12% 92%;
+  --muted: 150 6% 63%;
+  --faint: 150 5% 44%;
+  --leaf: 88 62% 55%;
+  --leaf-dim: 96 34% 32%;
+  --sky: 196 74% 55%;
+  --amber: 36 92% 58%;
+  --rose: 352 76% 60%;
+  --violet: 268 60% 68%;
+}
+
+.light {
+  --canvas: 90 22% 96%;
+  --surface: 0 0% 100%;
+  --raised: 90 20% 97%;
+  --line: 120 10% 85%;
+  --ink: 160 20% 12%;
+  --muted: 155 8% 38%;
+  --faint: 155 6% 55%;
+  --leaf: 104 52% 32%;
+  --leaf-dim: 100 40% 42%;
+  --sky: 205 78% 40%;
+  --amber: 30 86% 42%;
+  --rose: 348 72% 46%;
+  --violet: 268 48% 46%;
+}
+
+* { border-color: hsl(var(--line)); }
+
+html, body, #root { height: 100%; }
+
+body {
+  @apply bg-canvas text-ink font-sans antialiased;
+  font-feature-settings: 'ss01' 1, 'cv11' 1, 'tnum' 0;
+}
+
+::selection { background: hsl(var(--leaf) / 0.28); }
+
+::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: hsl(var(--line)); border-radius: 9px; }
+::-webkit-scrollbar-thumb:hover { background: hsl(var(--faint) / 0.6); }
+
+@layer components {
+  .panel {
+    @apply bg-surface border border-line rounded-2xl shadow-panel;
+  }
+  .panel-head {
+    @apply flex items-start justify-between gap-3 px-5 pt-4 pb-3 border-b border-line;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-line px-2.5 py-1
+           text-[11px] font-medium tracking-wide;
+  }
+  .num { @apply font-mono tabular-nums; }
+  .label {
+    @apply text-[10.5px] font-semibold uppercase tracking-[0.13em] text-faint;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-line
+           bg-raised px-3 py-2 text-[13px] font-medium text-ink transition-all duration-200
+           hover:border-leaf/60 hover:text-leaf active:scale-[0.985]
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-leaf/50 disabled:opacity-40;
+  }
+  .btn-primary {
+    @apply border-transparent bg-leaf text-canvas hover:bg-leaf/90 hover:text-canvas font-semibold;
+  }
+  .row-hover { @apply transition-colors duration-150 hover:bg-raised/70; }
+  .skeleton { @apply animate-pulse rounded-lg bg-raised; }
+}
+
+/* Leaflet dark tuning ---------------------------------------------------- */
+.leaflet-container {
+  background: hsl(var(--canvas));
+  font-family: 'Satoshi', system-ui, sans-serif;
+  outline: none;
+}
+/* CARTO dark_all basemap already matches the dark shell; the light theme gets a
+   gentle inversion so labels stay readable without swapping tile providers. */
+.light .leaflet-tile { filter: invert(1) hue-rotate(180deg) brightness(1.04) saturate(0.6); }
+.leaflet-control-zoom a,
+.leaflet-bar {
+  background: hsl(var(--raised)) !important;
+  color: hsl(var(--ink)) !important;
+  border-color: hsl(var(--line)) !important;
+}
+.leaflet-control-attribution {
+  background: hsl(var(--surface) / 0.86) !important;
+  color: hsl(var(--faint)) !important;
+  font-size: 9.5px !important;
+}
+.leaflet-control-attribution a { color: hsl(var(--muted)) !important; }
+.leaflet-popup-content-wrapper, .leaflet-popup-tip {
+  background: hsl(var(--surface));
+  color: hsl(var(--ink));
+  border: 1px solid hsl(var(--line));
+  border-radius: 12px;
+  box-shadow: 0 18px 40px -20px rgb(0 0 0 / 0.7);
+}
+.leaflet-popup-content { margin: 12px 14px; font-size: 12.5px; }
+.leaflet-popup-close-button { color: hsl(var(--faint)) !important; }
+
+.recharts-cartesian-axis-tick text { fill: hsl(var(--faint)); font-size: 10.5px; }
+.recharts-default-tooltip {
+  background: hsl(var(--surface)) !important;
+  border: 1px solid hsl(var(--line)) !important;
+  border-radius: 12px !important;
+  font-size: 12px !important;
+}
